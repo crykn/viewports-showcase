@@ -1,6 +1,0 @@
-d:assets:assets:0:application/unknown:1
-i:github.png:github-f87561b8bb354ef83b09a66e54f70e08.png:1714:image/png:1
-t:default.fnt:default-301cd793092dcaaafd793b66d5d46060.fnt:11628:application/unknown:1
-t:uiskin.atlas:uiskin-3aaf862ca52a95b35d6aa90fe31ef255.atlas:2924:application/unknown:1
-i:uiskin.png:uiskin-34b28ea01f92a90fa485f007870f9eff.png:28299:image/png:1
-t:uiskin.json:uiskin-2d597e823966ee8606d28d466f3aef54.json:2432:application/unknown:1
