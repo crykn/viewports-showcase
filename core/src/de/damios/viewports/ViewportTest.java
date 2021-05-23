@@ -8,6 +8,7 @@ import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -32,6 +33,8 @@ public class ViewportTest extends InputAdapter implements ApplicationListener {
 	private Array<Viewport> viewports;
 	private Array<String> names;
 	private Array<String> descriptions;
+
+	private Viewport activeViewport;
 
 	private ShapeRenderer shapeRenderer;
 	private Stage stage;
@@ -97,15 +100,17 @@ public class ViewportTest extends InputAdapter implements ApplicationListener {
 //		});
 //
 //		githubRepoButton.padLeft(3).padBottom(3).bottom().left();
-//
+
 		stage.addActor(root);
 //		stage.addActor(githubRepoButton);
 
-		viewports = getViewports(stage.getCamera());
+		viewports = getViewports(new OrthographicCamera());
 		names = getViewportNames();
 		descriptions = getViewportDescriptions();
 
-		stage.setViewport(viewports.first());
+		activeViewport = viewports.first();
+
+		stage.setViewport(new FitViewport(800, 600, stage.getCamera()));
 		currentViewportLabel.setText("[#ADD8E6]" + names.first());
 		descriptionLabel.setText("Description: " + descriptions.first());
 
@@ -133,8 +138,8 @@ public class ViewportTest extends InputAdapter implements ApplicationListener {
 
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-		stage.getViewport().apply();
-		shapeRenderer.setProjectionMatrix(stage.getViewport().getCamera().combined);
+		activeViewport.apply();
+		shapeRenderer.setProjectionMatrix(activeViewport.getCamera().combined);
 		shapeRenderer.begin(ShapeType.Filled);
 		/* Background */
 		shapeRenderer.setColor(Color.DARK_GRAY);
@@ -155,6 +160,7 @@ public class ViewportTest extends InputAdapter implements ApplicationListener {
 	}
 
 	public void resize(int width, int height) {
+		activeViewport.update(width, height, true);
 		stage.getViewport().update(width, height, true);
 	}
 
@@ -163,12 +169,11 @@ public class ViewportTest extends InputAdapter implements ApplicationListener {
 	}
 
 	public void switchToNewViewport(boolean forward) {
-		int index = (viewports.size + viewports.indexOf(stage.getViewport(), true) + (forward ? 1 : -1))
-				% viewports.size;
+		int index = (viewports.size + viewports.indexOf(activeViewport, true) + (forward ? 1 : -1)) % viewports.size;
 		currentViewportLabel.setText("[#ADD8E6]" + names.get(index));
 		descriptionLabel.setText("Description: " + descriptions.get(index));
-		Viewport viewport = viewports.get(index);
-		stage.setViewport(viewport);
+		activeViewport = viewports.get(index);
+		// stage.setViewport(viewport);
 		resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 	}
 
